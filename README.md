@@ -1,6 +1,6 @@
 # AppStore PriceScope 🔍
 
-全球 App Store 比价与汇率追踪矩阵
+Global App Store price comparison and exchange-rate tracking matrix
 
 Language: **English** | [繁體中文](./README.zh-Hant.md) | [Español](./README.es.md)
 
@@ -13,6 +13,8 @@ A full-stack App Store price intelligence platform built with Node.js + React (N
 - Region-level detail view with currency conversion to CNY
 - Popular search words
 - Dark / light / system theme
+- Shareable app pages (`/app/[id]`) with Open Graph preview cards
+- Structured SEO outputs (`robots.txt`, `sitemap.xml`, JSON-LD on share pages)
 - Compatible legacy endpoints (`/app/*`) and modern REST endpoints (`/api/*`)
 - In-memory cache by default, optional shared Redis cache for multi-instance deployments
 

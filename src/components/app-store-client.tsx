@@ -49,6 +49,8 @@ const TEXT: Record<Locale, Record<string, string>> = {
     regionalLedger: "Regional Ledger",
     openInStore: "Open in App Store",
     baseApp: "Base App",
+    shareLink: "Copy share link",
+    copied: "Copied",
     free: "Free",
     openStorePage: "Open Store Page",
     item: "Item",
@@ -92,6 +94,8 @@ const TEXT: Record<Locale, Record<string, string>> = {
     regionalLedger: "分區明細",
     openInStore: "前往 App Store",
     baseApp: "軟體本體",
+    shareLink: "複製分享連結",
+    copied: "已複製",
     free: "免費",
     openStorePage: "開啟商店頁面",
     item: "項目",
@@ -135,6 +139,8 @@ const TEXT: Record<Locale, Record<string, string>> = {
     regionalLedger: "Detalle por región",
     openInStore: "Abrir en App Store",
     baseApp: "App base",
+    shareLink: "Copiar enlace",
+    copied: "Copiado",
     free: "Gratis",
     openStorePage: "Abrir página de tienda",
     item: "Ítem",
@@ -241,6 +247,8 @@ export function AppStoreClient() {
   const [showPopularWords, setShowPopularWords] = useState(false);
 
   const [selectedAppImage, setSelectedAppImage] = useState("");
+  const [selectedAppId, setSelectedAppId] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const [results, setResults] = useState<AppInfoItem[]>([]);
   const [comparisonResults, setComparisonResults] = useState<AppInfoComparisonItem[]>([]);
@@ -283,6 +291,13 @@ export function AppStoreClient() {
 
     const stored = localStorage.getItem("colorMode") as "light" | "dark" | "system" | null;
     setColorMode(stored ?? "system");
+
+    const appIdFromUrl = new URLSearchParams(window.location.search).get("appId");
+    if (appIdFromUrl) {
+      setAppListCollapsed(true);
+      void searchApp(appIdFromUrl);
+      setSelectedAppId(appIdFromUrl.trim().replace(/^id/i, ""));
+    }
   }, []);
 
   useEffect(() => {
@@ -369,6 +384,7 @@ export function AppStoreClient() {
   }
 
   async function selectApp(app: AppListItem) {
+    setSelectedAppId(app.appId);
     setSelectedAppImage(app.appImage);
     setResults([]);
     setComparisonResults([]);
@@ -378,6 +394,14 @@ export function AppStoreClient() {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     await searchApp(app.appId);
+  }
+
+  async function copyShareLink() {
+    if (!selectedAppId) return;
+    const url = `${window.location.origin}/app/${selectedAppId}`;
+    await navigator.clipboard.writeText(url);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1500);
   }
 
   async function searchApp(id: string) {
@@ -622,6 +646,9 @@ export function AppStoreClient() {
                       <a href={currentApp.appStoreUrl} target="_blank" rel="noreferrer" className="nova-link">
                         {t.openInStore}
                       </a>
+                      <button type="button" className="nova-link-btn" onClick={() => void copyShareLink()}>
+                        {copied ? t.copied : t.shareLink}
+                      </button>
                     </div>
                   </article>
                 ) : null}

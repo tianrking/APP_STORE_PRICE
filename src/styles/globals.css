@@ -492,6 +492,17 @@ body {
   text-decoration: underline;
 }
 
+.nova-link-btn {
+  margin-left: 8px;
+  border: 1px solid var(--n-line);
+  background: transparent;
+  color: var(--n-accent);
+  border-radius: 999px;
+  font-size: 12px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
 .nova-object-tabs {
   display: flex;
   gap: 8px;
@@ -599,6 +610,93 @@ body {
   background: linear-gradient(135deg, var(--n-accent) 0%, var(--n-accent-2) 100%);
   box-shadow: 0 12px 22px var(--n-glow);
   cursor: pointer;
+}
+
+.share-wrap {
+  width: min(960px, calc(100vw - 32px));
+  margin: 24px auto 44px;
+}
+
+.share-card {
+  border: 1px solid var(--n-line);
+  border-radius: 22px;
+  background: var(--n-card);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.08);
+}
+
+.share-kicker {
+  margin: 0;
+  color: var(--n-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.share-card h1 {
+  margin: 10px 0 0;
+}
+
+.share-subtitle {
+  margin: 8px 0 0;
+  color: var(--n-muted);
+}
+
+.share-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 0;
+}
+
+.share-meta span {
+  font-size: 12px;
+  border: 1px solid var(--n-line);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+
+.share-price-grid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.share-price-item {
+  border: 1px solid var(--n-line);
+  border-radius: 12px;
+  padding: 10px;
+  background: color-mix(in oklab, var(--n-surface) 86%, transparent);
+}
+
+.share-price-item p {
+  margin: 0;
+  color: var(--n-muted);
+  font-size: 12px;
+}
+
+.share-price-item strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.06rem;
+}
+
+.share-price-item small {
+  color: var(--n-muted);
+}
+
+.share-cta {
+  margin-top: 16px;
+  display: inline-block;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--n-accent) 0%, var(--n-accent-2) 100%);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 10px 14px;
 }
 
 @media (max-width: 920px) {
