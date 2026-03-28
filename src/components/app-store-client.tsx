@@ -18,6 +18,25 @@ interface ApiResponse<T> {
   data: T;
 }
 
+interface QuickPickApp {
+  key: string;
+  label: string;
+  query: string;
+  glyph: string;
+  hue: string;
+}
+
+const QUICK_PICK_APPS: QuickPickApp[] = [
+  { key: "chatgpt", label: "ChatGPT", query: "ChatGPT", glyph: "CG", hue: "#10a37f" },
+  { key: "claude", label: "Claude", query: "Claude", glyph: "CL", hue: "#d97706" },
+  { key: "gemini", label: "Gemini", query: "Gemini", glyph: "GM", hue: "#2563eb" },
+  { key: "grok", label: "Grok", query: "Grok", glyph: "GK", hue: "#111827" },
+  { key: "copilot", label: "Copilot", query: "Microsoft Copilot", glyph: "CP", hue: "#7c3aed" },
+  { key: "perplexity", label: "Perplexity", query: "Perplexity", glyph: "PX", hue: "#0f766e" },
+  { key: "notion", label: "Notion", query: "Notion", glyph: "NT", hue: "#27272a" },
+  { key: "capcut", label: "CapCut", query: "CapCut", glyph: "CC", hue: "#dc2626" }
+];
+
 const TEXT: Record<Locale, Record<string, string>> = {
   en: {
     brandSubtitle: "Global App Cost Intelligence",
@@ -34,6 +53,8 @@ const TEXT: Record<Locale, Record<string, string>> = {
     appQuery: "App Query",
     placeholder: "ChatGPT, Claude, CapCut ...",
     trending: "Trending Searches",
+    quickPicks: "Quick Picks",
+    quickPicksHint: "Tap once to run an instant search",
     scanning: "Scanning...",
     scanPrices: "Scan Prices",
     errorEmptyApp: "Please enter an app name",
@@ -79,6 +100,8 @@ const TEXT: Record<Locale, Record<string, string>> = {
     appQuery: "App 關鍵字",
     placeholder: "ChatGPT、Claude、CapCut ...",
     trending: "熱門搜尋",
+    quickPicks: "熱門捷徑",
+    quickPicksHint: "點一下就直接開始搜尋",
     scanning: "掃描中...",
     scanPrices: "開始比價",
     errorEmptyApp: "請輸入 App 名稱",
@@ -124,6 +147,8 @@ const TEXT: Record<Locale, Record<string, string>> = {
     appQuery: "Búsqueda de app",
     placeholder: "ChatGPT, Claude, CapCut ...",
     trending: "Búsquedas populares",
+    quickPicks: "Accesos rápidos",
+    quickPicksHint: "Toca una vez para buscar al instante",
     scanning: "Escaneando...",
     scanPrices: "Comparar precios",
     errorEmptyApp: "Ingresa el nombre de una app",
@@ -347,8 +372,9 @@ export function AppStoreClient() {
     }
   }
 
-  async function searchAppList() {
-    const trimmed = appName.trim();
+  async function searchAppList(appNameOverride?: string) {
+    const targetName = appNameOverride ?? appName;
+    const trimmed = targetName.trim();
     if (!trimmed) {
       setErrorAppList(t.errorEmptyApp);
       return;
@@ -384,6 +410,12 @@ export function AppStoreClient() {
 
     setLoadingAppList(false);
     await fetchPopularWords();
+  }
+
+  async function handleQuickPick(query: string) {
+    setAppName(query);
+    setShowPopularWords(false);
+    await searchAppList(query);
   }
 
   async function selectApp(app: AppListItem) {
@@ -574,6 +606,29 @@ export function AppStoreClient() {
           </div>
 
           {errorAppList ? <p className="nova-error">{errorAppList}</p> : null}
+
+          <div className="nova-quick">
+            <div className="nova-quick-head">
+              <p className="nova-quick-title">{t.quickPicks}</p>
+              <p className="nova-quick-hint">{t.quickPicksHint}</p>
+            </div>
+            <div className="nova-quick-grid">
+              {QUICK_PICK_APPS.map((app) => (
+                <button
+                  key={app.key}
+                  type="button"
+                  className="nova-quick-item"
+                  disabled={loadingAppList || loadingDetail}
+                  onClick={() => void handleQuickPick(app.query)}
+                >
+                  <span className="nova-quick-icon" style={{ background: `linear-gradient(135deg, ${app.hue}, color-mix(in oklab, ${app.hue} 78%, #ffffff))` }}>
+                    {app.glyph}
+                  </span>
+                  <span className="nova-quick-label">{app.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </section>
 
         {appList.length > 0 && !loadingAppList ? (
