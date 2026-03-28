@@ -3,6 +3,7 @@ node_modules
 out
 .vercel
 .open-next
+.wrangler
 .env
 .env.local
 npm-debug.log*

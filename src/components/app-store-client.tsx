@@ -288,9 +288,11 @@ export function AppStoreClient() {
 
   const [colorMode, setColorMode] = useState<"light" | "dark" | "system">("system");
   const [showTopButton, setShowTopButton] = useState(false);
+  const [quickPickIcons, setQuickPickIcons] = useState<Record<string, string>>({});
 
   const inputRef = useRef<HTMLInputElement>(null);
   const blurTimeoutRef = useRef<number | null>(null);
+  const quickIconLoadedRef = useRef(false);
 
   const t = TEXT[locale];
   const heroAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_HERO;
@@ -316,6 +318,7 @@ export function AppStoreClient() {
         setPopularWords(popularRes.data ?? []);
       }
     })();
+    void fetchQuickPickIcons();
 
     const stored = localStorage.getItem("colorMode") as "light" | "dark" | "system" | null;
     setColorMode(stored ?? "system");
@@ -370,6 +373,35 @@ export function AppStoreClient() {
     if (response.code === 0) {
       setPopularWords(response.data ?? []);
     }
+  }
+
+  async function fetchQuickPickIcons() {
+    if (quickIconLoadedRef.current) return;
+
+    const nextIcons: Record<string, string> = {};
+    await Promise.all(
+      QUICK_PICK_APPS.map(async (app) => {
+        try {
+          const response = await postJSON<AppListItem[]>("/app/getAppList", {
+            appName: app.query,
+            areaCode: "us"
+          });
+          if (response.code === 0) {
+            const first = (response.data ?? []).find((item) => item.appImage?.trim().length > 0);
+            if (first?.appImage) {
+              nextIcons[app.key] = first.appImage;
+            }
+          }
+        } catch {
+          // Keep fallback glyph when icon fetch fails.
+        }
+      })
+    );
+
+    if (Object.keys(nextIcons).length > 0) {
+      setQuickPickIcons(nextIcons);
+    }
+    quickIconLoadedRef.current = true;
   }
 
   async function searchAppList(appNameOverride?: string) {
@@ -622,7 +654,22 @@ export function AppStoreClient() {
                   onClick={() => void handleQuickPick(app.query)}
                 >
                   <span className="nova-quick-icon" style={{ background: `linear-gradient(135deg, ${app.hue}, color-mix(in oklab, ${app.hue} 78%, #ffffff))` }}>
-                    {app.glyph}
+                    {quickPickIcons[app.key] ? (
+                      <img
+                        src={quickPickIcons[app.key]}
+                        alt={app.label}
+                        className="nova-quick-icon-img"
+                        onError={() => {
+                          setQuickPickIcons((prev) => {
+                            const next = { ...prev };
+                            delete next[app.key];
+                            return next;
+                          });
+                        }}
+                      />
+                    ) : (
+                      app.glyph
+                    )}
                   </span>
                   <span className="nova-quick-label">{app.label}</span>
                 </button>
