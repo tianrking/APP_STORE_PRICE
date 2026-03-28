@@ -25,7 +25,7 @@ async function postJSON<T>(url: string, body: unknown): Promise<ApiResponse<T>> 
 }
 
 function formatPrice(price: number, locale = "zh-CN") {
-  if (price === 0) return "免费";
+  if (price === 0) return "Free";
   return Number(price).toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
@@ -41,7 +41,7 @@ function toFlagEmoji(countryCode: string) {
 export function AppStoreClient() {
   const [appName, setAppName] = useState("ChatGPT");
   const [areaCode, setAreaCode] = useState("us");
-  const [areaList, setAreaList] = useState<AreaOption[]>([{ code: "us", name: "美国" }]);
+  const [areaList, setAreaList] = useState<AreaOption[]>([{ code: "us", name: "United States" }]);
 
   const [appList, setAppList] = useState<AppListItem[]>([]);
   const [loadingAppList, setLoadingAppList] = useState(false);
@@ -99,7 +99,7 @@ export function AppStoreClient() {
 
   useEffect(() => {
     function onScroll() {
-      setShowTopButton(window.scrollY > 480);
+      setShowTopButton(window.scrollY > 500);
     }
 
     window.addEventListener("scroll", onScroll);
@@ -121,11 +121,11 @@ export function AppStoreClient() {
   async function searchAppList() {
     const trimmed = appName.trim();
     if (!trimmed) {
-      setErrorAppList("请输入应用名称");
+      setErrorAppList("Please enter an app name");
       return;
     }
     if (trimmed.length > 20) {
-      setErrorAppList("应用名称长度不能超过20个字符");
+      setErrorAppList("App name must be 20 characters or fewer");
       return;
     }
 
@@ -147,10 +147,10 @@ export function AppStoreClient() {
       const list = response.data ?? [];
       setAppList(list);
       if (list.length === 0) {
-        setErrorAppList("未找到相关应用，请尝试更换关键词或地区");
+        setErrorAppList("No results. Try another keyword or region.");
       }
     } else {
-      setErrorAppList(response.message || "搜索失败");
+      setErrorAppList(response.message || "Search failed");
     }
 
     setLoadingAppList(false);
@@ -178,7 +178,7 @@ export function AppStoreClient() {
 
     const infoRes = await postJSON<AppInfoItem[]>("/app/getAppInfo", { appId: cleanId });
     if (infoRes.code !== 0) {
-      setErrorDetail(infoRes.message || "查询详情失败");
+      setErrorDetail(infoRes.message || "Failed to load details");
       setLoadingDetail(false);
       return;
     }
@@ -187,7 +187,7 @@ export function AppStoreClient() {
     setResults(detail);
     setSearched(true);
     if (detail.length === 0) {
-      setErrorDetail("未找到该应用的详细信息");
+      setErrorDetail("No detailed result found for this app");
       setLoadingDetail(false);
       return;
     }
@@ -202,182 +202,198 @@ export function AppStoreClient() {
   }
 
   return (
-    <div className="page-shell">
-      <header className="top-nav">
-        <div className="container nav-inner">
-          <div className="brand">
-            <Image src="/image.png" alt="logo" width={28} height={28} className="logo" />
-            <span>App Store Price</span>
+    <div className="nova-shell">
+      <div className="nova-bg-orb nova-bg-orb-a" />
+      <div className="nova-bg-orb nova-bg-orb-b" />
+
+      <header className="nova-topbar">
+        <div className="nova-wrap nova-topbar-inner">
+          <div className="nova-brand">
+            <Image src="/image.png" alt="logo" width={30} height={30} className="nova-brand-logo" />
+            <div>
+              <div className="nova-brand-title">Price Atlas</div>
+              <div className="nova-brand-sub">Global App Cost Intelligence</div>
+            </div>
           </div>
-          <div className="toolbar">
+
+          <div className="nova-theme-switch">
             <button
-              className={colorMode === "system" ? "theme-btn active" : "theme-btn"}
+              className={colorMode === "system" ? "nova-theme-btn active" : "nova-theme-btn"}
               onClick={() => setColorMode("system")}
             >
-              系统
+              Auto
             </button>
             <button
-              className={colorMode === "light" ? "theme-btn active" : "theme-btn"}
+              className={colorMode === "light" ? "nova-theme-btn active" : "nova-theme-btn"}
               onClick={() => setColorMode("light")}
             >
-              浅色
+              Light
             </button>
             <button
-              className={colorMode === "dark" ? "theme-btn active" : "theme-btn"}
+              className={colorMode === "dark" ? "nova-theme-btn active" : "nova-theme-btn"}
               onClick={() => setColorMode("dark")}
             >
-              深色
+              Dark
             </button>
           </div>
         </div>
       </header>
 
-      <main className="container main-content">
-        <section className="hero">
-          <h1>探索全球应用定价</h1>
-          <p>对比 App Store 各区价格与内购项目</p>
-          <div className="hero-badges">
-            <span className="hero-badge">{areaList.length} 个地区</span>
-            <span className="hero-badge">实时汇率换算</span>
-            <span className="hero-badge">内购对比</span>
+      <main className="nova-wrap nova-main">
+        <section className="nova-hero-panel">
+          <p className="nova-kicker">App Store Arbitrage Lens</p>
+          <h1>Discover pricing gaps before you buy</h1>
+          <p className="nova-hero-copy">
+            Search once, compare globally, and inspect in-app purchase tiers across markets.
+          </p>
+          <div className="nova-stat-row">
+            <span className="nova-stat-pill">{areaList.length} regions tracked</span>
+            <span className="nova-stat-pill">Hourly-access architecture</span>
+            <span className="nova-stat-pill">Native in-app comparison</span>
           </div>
         </section>
 
-        <section className="search-card">
-          <div className="search-row">
-            <select
-              className="control"
-              value={areaCode}
-              onChange={(event) => setAreaCode(event.target.value)}
-              disabled={loadingAppList || loadingDetail}
-            >
-              {areaList.map((area) => (
-                <option key={area.code} value={area.code}>
-                  {area.name} {area.code.toUpperCase()}
-                </option>
-              ))}
-            </select>
+        <section className="nova-search-panel">
+          <div className="nova-search-grid">
+            <label className="nova-field">
+              <span>Region</span>
+              <select
+                className="nova-control"
+                value={areaCode}
+                onChange={(event) => setAreaCode(event.target.value)}
+                disabled={loadingAppList || loadingDetail}
+              >
+                {areaList.map((area) => (
+                  <option key={area.code} value={area.code}>
+                    {area.name} ({area.code.toUpperCase()})
+                  </option>
+                ))}
+              </select>
+            </label>
 
-            <div className="input-wrap">
-              <input
-                ref={inputRef}
-                className="control"
-                value={appName}
-                maxLength={20}
-                placeholder="搜索应用、游戏..."
-                onChange={(event) => setAppName(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    void searchAppList();
-                  }
-                }}
-                onFocus={() => {
-                  if (blurTimeoutRef.current) {
-                    window.clearTimeout(blurTimeoutRef.current);
-                    blurTimeoutRef.current = null;
-                  }
-                  setShowPopularWords(true);
-                  void fetchPopularWords();
-                }}
-                onBlur={() => {
-                  blurTimeoutRef.current = window.setTimeout(() => {
-                    setShowPopularWords(false);
-                  }, 200);
-                }}
-              />
-              {showPopularWords && popularWords.length > 0 ? (
-                <div className="popular-panel" onMouseDown={(event) => event.preventDefault()}>
-                  <div className="popular-title">热门搜索</div>
-                  <div className="popular-list">
-                    {popularWords.map((word) => (
-                      <button
-                        key={word}
-                        className="popular-chip"
-                        onClick={() => {
-                          setAppName(word);
-                          setShowPopularWords(false);
-                          void searchAppList();
-                        }}
-                      >
-                        {word}
-                      </button>
-                    ))}
+            <label className="nova-field nova-field-grow">
+              <span>App Query</span>
+              <div className="nova-input-wrap">
+                <input
+                  ref={inputRef}
+                  className="nova-control"
+                  value={appName}
+                  maxLength={20}
+                  placeholder="ChatGPT, Claude, CapCut ..."
+                  onChange={(event) => setAppName(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      void searchAppList();
+                    }
+                  }}
+                  onFocus={() => {
+                    if (blurTimeoutRef.current) {
+                      window.clearTimeout(blurTimeoutRef.current);
+                      blurTimeoutRef.current = null;
+                    }
+                    setShowPopularWords(true);
+                    void fetchPopularWords();
+                  }}
+                  onBlur={() => {
+                    blurTimeoutRef.current = window.setTimeout(() => {
+                      setShowPopularWords(false);
+                    }, 200);
+                  }}
+                />
+
+                {showPopularWords && popularWords.length > 0 ? (
+                  <div className="nova-popover" onMouseDown={(event) => event.preventDefault()}>
+                    <p className="nova-popover-title">Trending Searches</p>
+                    <div className="nova-chip-row">
+                      {popularWords.map((word) => (
+                        <button
+                          key={word}
+                          className="nova-chip"
+                          onClick={() => {
+                            setAppName(word);
+                            setShowPopularWords(false);
+                            void searchAppList();
+                          }}
+                        >
+                          {word}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ) : null}
-            </div>
+                ) : null}
+              </div>
+            </label>
 
-            <button className="search-btn" onClick={() => void searchAppList()} disabled={loadingAppList || loadingDetail}>
-              {loadingAppList ? "搜索中..." : "搜索"}
+            <button className="nova-search-btn" onClick={() => void searchAppList()} disabled={loadingAppList || loadingDetail}>
+              {loadingAppList ? "Scanning..." : "Scan Prices"}
             </button>
           </div>
-          {errorAppList ? <p className="error-text">{errorAppList}</p> : null}
+
+          {errorAppList ? <p className="nova-error">{errorAppList}</p> : null}
         </section>
 
         {appList.length > 0 && !loadingAppList ? (
-          <section className="block">
-            <div className="block-head">
-              <h2>搜索结果 {appList.length > 0 ? `(${appList.length})` : ""}</h2>
-              <button className="link-btn" onClick={() => setAppListCollapsed((value) => !value)}>
-                {appListCollapsed ? "展开全部" : "收起"}
+          <section className="nova-results-panel">
+            <div className="nova-panel-head">
+              <h2>Candidate Apps · {appList.length}</h2>
+              <button className="nova-text-btn" onClick={() => setAppListCollapsed((value) => !value)}>
+                {appListCollapsed ? "Expand" : "Collapse"}
               </button>
             </div>
 
             {!appListCollapsed ? (
-              <div className="result-grid">
+              <div className="nova-card-grid">
                 {appList.map((app) => (
-                  <button key={app.appId} className="app-item lift" onClick={() => void selectApp(app)}>
+                  <button key={app.appId} className="nova-app-card" onClick={() => void selectApp(app)}>
                     <img
                       src={app.appImage}
                       alt={app.appName}
-                      className="app-icon"
+                      className="nova-app-icon"
                       onError={(event) => {
                         event.currentTarget.src = "/image.png";
                       }}
                     />
-                    <div className="app-item-main">
-                      <div className="app-name">{app.appName}</div>
-                      <div className="app-desc">{app.appDesc || "应用"}</div>
+                    <div className="nova-app-meta">
+                      <p className="nova-app-name">{app.appName}</p>
+                      <p className="nova-app-desc">{app.appDesc || "App"}</p>
                     </div>
                   </button>
                 ))}
               </div>
             ) : (
-              <div className="collapsed-hint" onClick={() => setAppListCollapsed(false)}>
-                已折叠搜索结果，点击查看
-              </div>
+              <div className="nova-collapsed">Results hidden. Tap to expand.</div>
             )}
           </section>
         ) : null}
 
-        {loadingDetail ? <div className="loading-state">正在获取全球定价数据...</div> : null}
-        {errorDetail ? <div className="error-state">{errorDetail}</div> : null}
+        {loadingDetail ? <section className="nova-status">Building global price matrix...</section> : null}
+        {errorDetail ? <section className="nova-error-panel">{errorDetail}</section> : null}
 
         {(results.length > 0 || comparisonResults.length > 0) && !loadingDetail && appListCollapsed ? (
-          <section className="block">
-            <div className="tab-row">
+          <section className="nova-analysis-panel">
+            <div className="nova-tab-row">
               <button
-                className={currentTab === "comparison" ? "tab-btn active" : "tab-btn"}
+                className={currentTab === "comparison" ? "nova-tab active" : "nova-tab"}
                 onClick={() => setCurrentTab("comparison")}
               >
-                全球比价
+                Price Matrix
               </button>
               <button
-                className={currentTab === "list" ? "tab-btn active" : "tab-btn"}
+                className={currentTab === "list" ? "nova-tab active" : "nova-tab"}
                 onClick={() => setCurrentTab("list")}
               >
-                分地区详情
+                Regional Ledger
               </button>
             </div>
 
             {currentTab === "comparison" ? (
-              <div className="detail-wrap">
+              <>
                 {currentApp ? (
-                  <div className="hero-card lift">
+                  <article className="nova-focus-card">
                     <img
-                      src={currentApp.appStoreUrl ? selectedAppImage : selectedAppImage}
+                      src={selectedAppImage}
                       alt={currentApp.name}
-                      className="hero-icon"
+                      className="nova-focus-icon"
                       onError={(event) => {
                         event.currentTarget.src = "/image.png";
                       }}
@@ -385,52 +401,53 @@ export function AppStoreClient() {
                     <div>
                       <h3>{currentApp.name || appName}</h3>
                       <p>{currentApp.subtitle}</p>
-                      <p className="muted">{currentApp.developer}</p>
-                      <a href={currentApp.appStoreUrl} target="_blank" rel="noreferrer" className="store-link">
-                        在 App Store 查看
+                      <p className="nova-muted">{currentApp.developer}</p>
+                      <a href={currentApp.appStoreUrl} target="_blank" rel="noreferrer" className="nova-link">
+                        Open in App Store
                       </a>
                     </div>
-                  </div>
+                  </article>
                 ) : null}
 
                 {comparisonResults.length > 0 ? (
                   <>
-                    <div className="tag-row">
+                    <div className="nova-object-tabs">
                       {comparisonResults.map((item, index) => (
                         <button
                           key={`${item.object}-${index}`}
-                          className={index === selectedComparisonIndex ? "tag active" : "tag"}
+                          className={index === selectedComparisonIndex ? "nova-object-tab active" : "nova-object-tab"}
                           onClick={() => setSelectedComparisonIndex(index)}
                         >
                           {item.object}
                         </button>
                       ))}
                     </div>
-                    <div className="price-grid">
+
+                    <div className="nova-price-grid">
                       {comparisonResults[selectedComparisonIndex]?.priceList.map((price, index) => (
-                        <div key={`${price.area}-${index}`} className="price-card">
-                          <div className="price-area">
-                            <span>{toFlagEmoji(price.area)}</span> {price.areaName}
-                          </div>
-                          <div className="price-cny">¥ {formatPrice(price.cnyPrice, "zh-CN")}</div>
-                          <div className="price-origin">
-                            {price.currency} {price.price === 0 ? "免费" : formatPrice(price.price, price.locale)}
-                          </div>
+                        <div key={`${price.area}-${index}`} className="nova-price-tile">
+                          <p className="nova-price-area">
+                            {toFlagEmoji(price.area)} {price.areaName}
+                          </p>
+                          <p className="nova-price-main">¥ {formatPrice(price.cnyPrice, "zh-CN")}</p>
+                          <p className="nova-price-sub">
+                            {price.currency} {price.price === 0 ? "Free" : formatPrice(price.price, price.locale)}
+                          </p>
                         </div>
                       ))}
                     </div>
                   </>
                 ) : null}
-              </div>
+              </>
             ) : (
-              <div className="detail-list">
+              <div className="nova-ledger-list">
                 {results.map((app) => (
-                  <article key={app.area} className="app-card">
-                    <div className="app-card-head">
+                  <article key={app.area} className="nova-ledger-card">
+                    <div className="nova-ledger-head">
                       <img
                         src={selectedAppImage}
                         alt={app.name}
-                        className="hero-icon"
+                        className="nova-focus-icon"
                         onError={(event) => {
                           event.currentTarget.src = "/image.png";
                         }}
@@ -438,34 +455,36 @@ export function AppStoreClient() {
                       <div>
                         <h3>{app.name}</h3>
                         <p>{app.subtitle}</p>
-                        <p className="muted">{app.developer}</p>
-                        <p className="muted">
+                        <p className="nova-muted">{app.developer}</p>
+                        <p className="nova-muted">
                           {toFlagEmoji(app.area)} {app.areaName}
                         </p>
-                        <p className="price-line">
-                          {app.price.currency} {app.price.price === 0 ? "免费" : formatPrice(app.price.price, app.price.locale)}
-                          {app.price.price > 0 ? ` (≈ ¥${formatPrice(app.price.cnyPrice, "zh-CN")})` : ""}
+                        <p className="nova-ledger-price">
+                          {app.price.currency} {app.price.price === 0 ? "Free" : formatPrice(app.price.price, app.price.locale)}
+                          {app.price.price > 0 ? `  ·  ≈ ¥${formatPrice(app.price.cnyPrice, "zh-CN")}` : ""}
                         </p>
-                        <a href={app.appStoreUrl} target="_blank" rel="noreferrer" className="store-link">
-                          跳转 App Store
+                        <a href={app.appStoreUrl} target="_blank" rel="noreferrer" className="nova-link">
+                          Open Store Page
                         </a>
                       </div>
                     </div>
-                    <div className="iap-table">
-                      <div className="iap-head">
-                        <span>项目</span>
-                        <span>价格</span>
-                        <span>约合人民币</span>
+
+                    <div className="nova-iap-table">
+                      <div className="nova-iap-head">
+                        <span>Item</span>
+                        <span>Local</span>
+                        <span>CNY</span>
                       </div>
+
                       {app.inAppPurchaseList.length === 0 ? (
-                        <div className="iap-empty">无内购项目</div>
+                        <div className="nova-iap-empty">No in-app purchases</div>
                       ) : (
                         app.inAppPurchaseList.map((item, index) => (
-                          <div key={`${item.object}-${index}`} className="iap-row">
+                          <div key={`${item.object}-${index}`} className="nova-iap-row">
                             <span>{item.object}</span>
                             <span>
                               {item.price.price === 0
-                                ? "免费"
+                                ? "Free"
                                 : `${item.price.currency} ${formatPrice(item.price.price, item.price.locale)}`}
                             </span>
                             <span>{item.price.price > 0 ? `¥ ${formatPrice(item.price.cnyPrice, "zh-CN")}` : "-"}</span>
@@ -481,13 +500,13 @@ export function AppStoreClient() {
         ) : null}
 
         {!loadingAppList && !loadingDetail && !errorAppList && !errorDetail && appList.length === 0 && !searched ? (
-          <section className="empty-block">输入应用名称，开始探索全球价格</section>
+          <section className="nova-empty">Start with an app name to generate your first price atlas.</section>
         ) : null}
       </main>
 
       {showTopButton ? (
-        <button className="top-btn" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-          返回顶部
+        <button className="nova-float" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+          Top
         </button>
       ) : null}
     </div>
