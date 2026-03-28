@@ -1,62 +1,57 @@
-# DIY JS App Store Price Tracker
+# AppStore PriceScope 🔍
 
-Node.js + React (Next.js) 实现的 App Store 全球价格查询与内购对比系统，适配 Vercel。
+全球 App Store 比价与汇率追踪矩阵
 
-## 功能覆盖
+Language: **English** | [繁體中文](./README.zh-Hant.md) | [Español](./README.es.md)
 
-- 支持地区列表查询
-- 按地区搜索 App 列表（iPhone / iPad / Mac / TV 并行搜索）
-- 查询 App 在全部地区的价格、开发者、副标题、内购价格
-- 全局比价视图（软件本体 + 内购）
-- 分地区详情视图
-- 热门搜索词（内存统计）
-- 深色/浅色/系统模式
-- 1 天缓存（应用列表、应用详情、汇率）
-- 兼容原 Java 项目接口路径：`/app/getAreaList` 等
+A full-stack App Store price intelligence platform built with Node.js + React (Next.js), optimized for Vercel.
 
-## 数据源
+## Features
 
-- Apple App Store 网页：`https://apps.apple.com/...`
-- 汇率服务：`https://open.er-api.com/v6/latest/{currency}`
+- Multi-region App search (iPhone / iPad / Mac / TV)
+- Global price comparison (base app + in-app purchases)
+- Region-level detail view with currency conversion to CNY
+- Popular search words
+- Dark / light / system theme
+- Compatible legacy endpoints (`/app/*`) and modern REST endpoints (`/api/*`)
+- In-memory cache by default, optional shared Redis cache for multi-instance deployments
 
-## 技术架构
+## Data Sources
 
-- 前端：Next.js App Router + React 19
-- 后端：Next.js Route Handlers (Node runtime)
-- 抓取解析：`fetch + cheerio`
-- 并发：`p-limit`
-- 参数校验：`zod`
-- 缓存：`lru-cache`
+- Apple App Store webpages: `https://apps.apple.com/...`
+- Exchange rates: `https://open.er-api.com/v6/latest/{currency}`
 
-## 本地运行
+## Tech Stack
+
+- Frontend: Next.js App Router + React 19
+- Backend: Next.js Route Handlers (Node runtime)
+- Parsing: `fetch + cheerio`
+- Concurrency: `p-limit`
+- Validation: `zod`
+- Cache: `lru-cache` + optional Upstash Redis
+
+## Run Locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-浏览器打开 `http://localhost:3000`
+Open `http://localhost:3000`
 
-## 部署到 Vercel
+## Deploy on Vercel
 
-1. 推送到 Git 仓库
-2. 在 Vercel 导入该仓库
-3. Framework 选择 Next.js，使用默认构建命令即可
-4. 如果你使用 Upstash Redis，在 Vercel Project Settings -> Environment Variables 配置：
-   `UPSTASH_REDIS_REST_URL`、`UPSTASH_REDIS_REST_TOKEN`
-5. 点击 Deploy
-
-### Vercel 推荐设置
-
-- Node.js Version: 20.x（默认即可）
-- Build Command: `npm run build`
-- Install Command: `npm install`
-- Output Directory: 留空（Next.js 自动处理）
-- 本仓库已包含 `vercel.json`，接口函数 `maxDuration` 已设置为 `60s`
+1. Import this repo into Vercel
+2. Framework: Next.js (auto-detected)
+3. Build Command: `npm run build`
+4. Install Command: `npm install`
+5. Optional env vars for shared cache:
+   - `UPSTASH_REDIS_REST_URL`
+   - `UPSTASH_REDIS_REST_TOKEN`
 
 ## API
 
-### 兼容原接口
+Legacy-compatible:
 
 - `POST /app/getAreaList`
 - `POST /app/getPopularSearchWordList`
@@ -64,24 +59,10 @@ npm run dev
 - `POST /app/getAppInfo`
 - `POST /app/getAppInfoComparison`
 
-### 新接口
+Modern:
 
 - `GET /api/areas`
 - `GET /api/popular-searches`
 - `POST /api/apps/search`
 - `GET /api/apps/:appId`
 - `GET /api/apps/:appId/comparison`
-
-## 备注
-
-- 默认可直接运行（内存缓存 + 内存热词统计）。
-- 如果配置 `UPSTASH_REDIS_REST_URL` 与 `UPSTASH_REDIS_REST_TOKEN`，会自动启用共享缓存与共享热门词统计，适合 Vercel 多实例部署。
-
-## 环境变量
-
-可参考 `.env.example`：
-
-```bash
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
-```
