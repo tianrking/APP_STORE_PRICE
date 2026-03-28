@@ -2,7 +2,9 @@
   "$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
   "name": "appstore-price",
   "main": ".open-next/worker.js",
-  "compatibility_date": "2026-03-29",
+  "workers_dev": true,
+  "preview_urls": true,
+  "compatibility_date": "2026-03-28",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
     "directory": ".open-next/assets",
