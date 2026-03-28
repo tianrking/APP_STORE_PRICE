@@ -2,6 +2,7 @@ node_modules
 .next
 out
 .vercel
+.open-next
 .env
 .env.local
 npm-debug.log*

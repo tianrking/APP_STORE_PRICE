@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "tsc --noEmit",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "cf:build": "npx -y @opennextjs/cloudflare@latest build",
+    "cf:preview": "npx -y @opennextjs/cloudflare@latest preview",
+    "cf:deploy": "npx -y @opennextjs/cloudflare@latest deploy"
   },
   "dependencies": {
     "@upstash/redis": "^1.37.0",

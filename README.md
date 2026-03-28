@@ -51,6 +51,26 @@ Open `http://localhost:3000`
    - `UPSTASH_REDIS_REST_URL`
    - `UPSTASH_REDIS_REST_TOKEN`
 
+## Deploy on Cloudflare Workers (coexist with Vercel)
+
+This repository now supports a coexist setup:
+
+- Vercel deployment: `npm run build`
+- Cloudflare deployment: OpenNext + Wrangler (`wrangler.jsonc`)
+
+Commands:
+
+```bash
+npm run cf:build
+npm run cf:preview
+npm run cf:deploy
+```
+
+Notes:
+
+- The scripts use `npx @opennextjs/cloudflare@latest` to avoid local lock-in.
+- You can keep both platforms in one branch/repo.
+
 ## API
 
 Legacy-compatible:
