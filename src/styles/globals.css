@@ -127,6 +127,12 @@ body {
   background: color-mix(in oklab, var(--n-surface) 80%, transparent);
 }
 
+.nova-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .nova-theme-btn {
   border: none;
   background: transparent;
@@ -142,6 +148,16 @@ body {
   color: #fff;
   background: linear-gradient(135deg, var(--n-accent) 0%, var(--n-accent-2) 100%);
   box-shadow: 0 8px 16px var(--n-glow);
+}
+
+.nova-locale {
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--n-line);
+  padding: 0 10px;
+  background: color-mix(in oklab, var(--n-surface) 90%, transparent);
+  color: var(--n-text);
+  font-size: 12px;
 }
 
 .nova-main {
@@ -592,6 +608,14 @@ body {
 
   .nova-search-grid {
     grid-template-columns: 1fr;
+  }
+
+  .nova-controls {
+    gap: 6px;
+  }
+
+  .nova-locale {
+    width: 72px;
   }
 
   .nova-search-btn {
