@@ -307,7 +307,14 @@ export function AppStoreClient() {
               <div className="result-grid">
                 {appList.map((app) => (
                   <button key={app.appId} className="app-item" onClick={() => void selectApp(app)}>
-                    <img src={app.appImage} alt={app.appName} className="app-icon" />
+                    <img
+                      src={app.appImage}
+                      alt={app.appName}
+                      className="app-icon"
+                      onError={(event) => {
+                        event.currentTarget.src = "/image.png";
+                      }}
+                    />
                     <div className="app-item-main">
                       <div className="app-name">{app.appName}</div>
                       <div className="app-desc">{app.appDesc || "应用"}</div>
@@ -347,7 +354,14 @@ export function AppStoreClient() {
               <div className="detail-wrap">
                 {currentApp ? (
                   <div className="hero-card">
-                    <img src={currentApp.appStoreUrl ? selectedAppImage : selectedAppImage} alt={currentApp.name} className="hero-icon" />
+                    <img
+                      src={currentApp.appStoreUrl ? selectedAppImage : selectedAppImage}
+                      alt={currentApp.name}
+                      className="hero-icon"
+                      onError={(event) => {
+                        event.currentTarget.src = "/image.png";
+                      }}
+                    />
                     <div>
                       <h3>{currentApp.name || appName}</h3>
                       <p>{currentApp.subtitle}</p>
@@ -393,7 +407,14 @@ export function AppStoreClient() {
                 {results.map((app) => (
                   <article key={app.area} className="app-card">
                     <div className="app-card-head">
-                      <img src={selectedAppImage} alt={app.name} className="hero-icon" />
+                      <img
+                        src={selectedAppImage}
+                        alt={app.name}
+                        className="hero-icon"
+                        onError={(event) => {
+                          event.currentTarget.src = "/image.png";
+                        }}
+                      />
                       <div>
                         <h3>{app.name}</h3>
                         <p>{app.subtitle}</p>

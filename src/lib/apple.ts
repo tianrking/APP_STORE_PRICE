@@ -10,6 +10,24 @@ import type { AppInfoComparisonItem, AppInfoItem, AppListItem, InAppPurchaseItem
 
 const SEARCH_ENTITIES = ["iphone", "ipad", "mac", "tv"];
 const fetchLimit = pLimit(6);
+const APP_ICON_FALLBACK = "/image.png";
+
+function normalizeAppleImageUrl(rawUrl: string): string {
+  const input = rawUrl.trim();
+  if (!input) return APP_ICON_FALLBACK;
+
+  if (!input.includes("{w}") && !input.includes("{h}") && !input.includes("{f}") && !input.includes("{c}")) {
+    return input;
+  }
+
+  const output = input
+    .replaceAll("{w}", "256")
+    .replaceAll("{h}", "256")
+    .replaceAll("{c}", "bb")
+    .replaceAll("{f}", "png");
+
+  return output || APP_ICON_FALLBACK;
+}
 
 function parseSerializedServerData(html: string) {
   const $ = load(html);
@@ -116,7 +134,7 @@ export async function getAppList(areaCode: string, appName: string): Promise<App
               return {
                 appId,
                 appName: String((lockup as { title?: string }).title ?? ""),
-                appImage: String((lockup as { icon?: { template?: string } }).icon?.template ?? ""),
+                appImage: normalizeAppleImageUrl(String((lockup as { icon?: { template?: string } }).icon?.template ?? "")),
                 appDesc: String((lockup as { subtitle?: string }).subtitle ?? "")
               } satisfies AppListItem;
             })
