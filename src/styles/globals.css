@@ -1,48 +1,68 @@
 :root {
-  --bg: #f2f4f7;
-  --card: #ffffff;
+  --bg: #eef3ff;
+  --bg-soft: #f8faff;
+  --card: rgba(255, 255, 255, 0.82);
+  --card-solid: #ffffff;
   --text: #0f172a;
-  --subtle: #64748b;
-  --line: #e2e8f0;
+  --subtle: #5b667f;
+  --line: rgba(15, 23, 42, 0.08);
   --blue: #2563eb;
+  --blue-deep: #1d4ed8;
+  --shadow-sm: 0 8px 28px rgba(37, 99, 235, 0.08);
+  --shadow-md: 0 16px 38px rgba(15, 23, 42, 0.12);
 }
 
 .dark {
-  --bg: #111827;
-  --card: #1f2937;
-  --text: #f9fafb;
-  --subtle: #94a3b8;
-  --line: #334155;
-  --blue: #60a5fa;
+  --bg: #0c1221;
+  --bg-soft: #131b30;
+  --card: rgba(20, 29, 49, 0.78);
+  --card-solid: #18233b;
+  --text: #ecf2ff;
+  --subtle: #a2b0cf;
+  --line: rgba(255, 255, 255, 0.1);
+  --blue: #7aa6ff;
+  --blue-deep: #5c8fff;
+  --shadow-sm: 0 10px 26px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 22px 44px rgba(0, 0, 0, 0.34);
 }
 
 * {
   box-sizing: border-box;
 }
 
+html,
+body {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
-  background: radial-gradient(circle at 20% 0%, #dbeafe 0%, var(--bg) 45%);
   color: var(--text);
-  font-family: "SF Pro Text", "PingFang SC", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(1200px 500px at -5% -10%, rgba(96, 165, 250, 0.3), transparent 60%),
+    radial-gradient(900px 420px at 105% -5%, rgba(59, 130, 246, 0.2), transparent 55%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 48%, var(--bg) 100%);
+  font-family: "Avenir Next", "SF Pro Text", "PingFang SC", "Segoe UI", sans-serif;
+  letter-spacing: 0.01em;
 }
 
 .container {
-  width: min(1080px, calc(100vw - 32px));
+  width: min(1120px, calc(100vw - 32px));
   margin: 0 auto;
 }
 
 .top-nav {
   position: sticky;
   top: 0;
-  z-index: 50;
-  backdrop-filter: blur(12px);
-  background: color-mix(in oklab, var(--bg) 82%, transparent);
+  z-index: 60;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: color-mix(in oklab, var(--bg) 72%, transparent);
   border-bottom: 1px solid var(--line);
 }
 
 .nav-inner {
-  height: 64px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -51,17 +71,23 @@ body {
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 11px;
+  font-size: 1rem;
   font-weight: 700;
 }
 
 .logo {
-  border-radius: 8px;
+  border-radius: 9px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
 .toolbar {
-  display: flex;
-  gap: 8px;
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: color-mix(in oklab, var(--card-solid) 88%, transparent);
 }
 
 .theme-btn,
@@ -71,39 +97,76 @@ body {
 .search-btn,
 .tab-btn {
   border: 1px solid var(--line);
-  background: var(--card);
+  background: color-mix(in oklab, var(--card-solid) 90%, transparent);
   color: var(--text);
-  border-radius: 12px;
+  border-radius: 11px;
   padding: 8px 12px;
   cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.theme-btn {
+  border: none;
+  background: transparent;
+  font-size: 12px;
+}
+
+.theme-btn.active {
+  background: color-mix(in oklab, var(--blue) 22%, var(--card-solid));
+  color: var(--blue-deep);
 }
 
 .main-content {
-  padding: 30px 0 70px;
+  padding: 30px 0 84px;
 }
 
 .hero {
   text-align: center;
-  margin: 16px 0 24px;
+  margin: 20px 0 26px;
 }
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(30px, 4vw, 44px);
+  font-size: clamp(32px, 4.2vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
 }
 
 .hero p {
+  margin: 12px 0 0;
   color: var(--subtle);
+  font-size: clamp(14px, 2vw, 17px);
+}
+
+.hero-badges {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-badge {
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue-deep);
+  border: 1px solid color-mix(in oklab, var(--blue) 42%, transparent);
+  background: color-mix(in oklab, var(--blue) 14%, var(--card-solid));
 }
 
 .search-card,
 .block,
 .hero-card,
 .app-card {
-  background: color-mix(in oklab, var(--card) 92%, transparent);
+  background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 22px;
   padding: 16px;
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .block,
@@ -113,7 +176,7 @@ body {
 
 .search-row {
   display: grid;
-  grid-template-columns: 180px 1fr 110px;
+  grid-template-columns: 190px 1fr 112px;
   gap: 10px;
 }
 
@@ -123,36 +186,51 @@ body {
 
 .control {
   width: 100%;
-  height: 46px;
-  border-radius: 12px;
+  height: 48px;
+  border-radius: 13px;
   border: 1px solid var(--line);
-  padding: 0 12px;
-  background: var(--card);
+  padding: 0 13px;
+  background: color-mix(in oklab, var(--card-solid) 90%, transparent);
   color: var(--text);
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.control:focus {
+  border-color: color-mix(in oklab, var(--blue) 60%, var(--line));
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--blue) 20%, transparent);
 }
 
 .search-btn {
-  background: var(--blue);
-  color: white;
   border: none;
+  color: #f8fbff;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+  font-weight: 700;
+}
+
+.search-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(37, 99, 235, 0.28);
 }
 
 .popular-panel {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
   width: 100%;
-  background: var(--card);
+  background: var(--card-solid);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 14px;
+  box-shadow: var(--shadow-md);
   padding: 12px;
   z-index: 20;
 }
 
 .popular-title {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--subtle);
   margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .popular-list {
@@ -161,36 +239,52 @@ body {
   gap: 8px;
 }
 
+.popular-chip:hover,
+.link-btn:hover,
+.tab-btn:hover,
+.tag:hover {
+  border-color: color-mix(in oklab, var(--blue) 45%, var(--line));
+  transform: translateY(-1px);
+}
+
 .result-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 11px;
 }
 
 .app-item {
   border: 1px solid var(--line);
-  background: var(--card);
-  border-radius: 14px;
-  padding: 10px;
+  background: color-mix(in oklab, var(--card-solid) 92%, transparent);
+  border-radius: 15px;
+  padding: 11px;
   display: flex;
-  gap: 10px;
+  gap: 11px;
   align-items: center;
   text-align: left;
   cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.app-item:hover {
+  border-color: color-mix(in oklab, var(--blue) 45%, var(--line));
+  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.12);
+  transform: translateY(-2px);
 }
 
 .app-icon,
 .hero-icon {
   width: 60px;
   height: 60px;
-  border-radius: 14px;
+  border-radius: 16px;
   object-fit: cover;
   border: 1px solid var(--line);
+  background: var(--card-solid);
 }
 
 .hero-icon {
-  width: 80px;
-  height: 80px;
+  width: 84px;
+  height: 84px;
 }
 
 .app-name {
@@ -221,6 +315,11 @@ body {
   margin-bottom: 10px;
 }
 
+.block-head h2 {
+  margin: 0;
+  font-size: 1.03rem;
+}
+
 .tab-row {
   gap: 8px;
   margin-bottom: 12px;
@@ -228,36 +327,55 @@ body {
 
 .tab-btn.active,
 .tag.active {
-  border-color: var(--blue);
-  color: var(--blue);
+  border-color: color-mix(in oklab, var(--blue) 65%, var(--line));
+  background: color-mix(in oklab, var(--blue) 18%, var(--card-solid));
+  color: var(--blue-deep);
 }
 
 .hero-card {
   display: flex;
-  gap: 12px;
+  gap: 13px;
   margin-bottom: 12px;
+}
+
+.hero-card h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.hero-card p {
+  margin: 8px 0 0;
 }
 
 .tag-row {
   gap: 8px;
   overflow-x: auto;
+  padding-bottom: 2px;
   margin-bottom: 10px;
 }
 
 .price-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
   gap: 10px;
 }
 
 .price-card {
   border: 1px solid var(--line);
   border-radius: 14px;
-  padding: 10px;
-  background: var(--card);
+  padding: 11px;
+  background: color-mix(in oklab, var(--card-solid) 92%, transparent);
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.price-card:hover {
+  border-color: color-mix(in oklab, var(--blue) 45%, var(--line));
+  transform: translateY(-2px);
 }
 
 .price-cny {
+  margin-top: 5px;
+  font-size: 1.08rem;
   font-weight: 800;
 }
 
@@ -274,11 +392,19 @@ body {
 .error-text,
 .error-state {
   color: #ef4444;
+  margin-top: 8px;
+}
+
+.loading-state {
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px dashed var(--line);
+  background: color-mix(in oklab, var(--card-solid) 84%, transparent);
 }
 
 .app-card-head {
   display: flex;
-  gap: 12px;
+  gap: 13px;
   margin-bottom: 12px;
 }
 
@@ -291,7 +417,8 @@ body {
   display: inline-block;
   margin-top: 8px;
   font-size: 13px;
-  color: var(--blue);
+  font-weight: 600;
+  color: var(--blue-deep);
   text-decoration: none;
 }
 
@@ -314,7 +441,7 @@ body {
 }
 
 .iap-head {
-  background: color-mix(in oklab, var(--card) 80%, var(--bg));
+  background: color-mix(in oklab, var(--card-solid) 68%, var(--bg));
   font-weight: 700;
   font-size: 12px;
 }
@@ -336,6 +463,7 @@ body {
   border: 1px dashed var(--line);
   border-radius: 20px;
   padding: 28px 16px;
+  background: color-mix(in oklab, var(--card-solid) 84%, transparent);
 }
 
 .top-btn {
@@ -343,11 +471,28 @@ body {
   right: 18px;
   bottom: 20px;
   border: 1px solid var(--line);
-  background: var(--card);
+  background: color-mix(in oklab, var(--card-solid) 90%, transparent);
   color: var(--text);
   padding: 10px 14px;
   border-radius: 12px;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.lift {
+  animation: soft-in 280ms ease;
+}
+
+@keyframes soft-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 900px) {
@@ -355,12 +500,31 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .toolbar {
+    gap: 4px;
+  }
+
+  .theme-btn {
+    padding: 7px 10px;
+  }
+
   .iap-head,
   .iap-row {
     grid-template-columns: 1fr;
   }
 
-  .app-card-head {
+  .app-card-head,
+  .hero-card {
     flex-direction: column;
+  }
+
+  .hero-icon {
+    width: 72px;
+    height: 72px;
+  }
+
+  .top-btn {
+    right: 12px;
+    bottom: 14px;
   }
 }

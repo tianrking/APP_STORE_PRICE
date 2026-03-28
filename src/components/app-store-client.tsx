@@ -210,9 +210,24 @@ export function AppStoreClient() {
             <span>App Store Price</span>
           </div>
           <div className="toolbar">
-            <button className="theme-btn" onClick={() => setColorMode("system")}>系统</button>
-            <button className="theme-btn" onClick={() => setColorMode("light")}>浅色</button>
-            <button className="theme-btn" onClick={() => setColorMode("dark")}>深色</button>
+            <button
+              className={colorMode === "system" ? "theme-btn active" : "theme-btn"}
+              onClick={() => setColorMode("system")}
+            >
+              系统
+            </button>
+            <button
+              className={colorMode === "light" ? "theme-btn active" : "theme-btn"}
+              onClick={() => setColorMode("light")}
+            >
+              浅色
+            </button>
+            <button
+              className={colorMode === "dark" ? "theme-btn active" : "theme-btn"}
+              onClick={() => setColorMode("dark")}
+            >
+              深色
+            </button>
           </div>
         </div>
       </header>
@@ -221,6 +236,11 @@ export function AppStoreClient() {
         <section className="hero">
           <h1>探索全球应用定价</h1>
           <p>对比 App Store 各区价格与内购项目</p>
+          <div className="hero-badges">
+            <span className="hero-badge">{areaList.length} 个地区</span>
+            <span className="hero-badge">实时汇率换算</span>
+            <span className="hero-badge">内购对比</span>
+          </div>
         </section>
 
         <section className="search-card">
@@ -297,7 +317,7 @@ export function AppStoreClient() {
         {appList.length > 0 && !loadingAppList ? (
           <section className="block">
             <div className="block-head">
-              <h2>搜索结果</h2>
+              <h2>搜索结果 {appList.length > 0 ? `(${appList.length})` : ""}</h2>
               <button className="link-btn" onClick={() => setAppListCollapsed((value) => !value)}>
                 {appListCollapsed ? "展开全部" : "收起"}
               </button>
@@ -306,7 +326,7 @@ export function AppStoreClient() {
             {!appListCollapsed ? (
               <div className="result-grid">
                 {appList.map((app) => (
-                  <button key={app.appId} className="app-item" onClick={() => void selectApp(app)}>
+                  <button key={app.appId} className="app-item lift" onClick={() => void selectApp(app)}>
                     <img
                       src={app.appImage}
                       alt={app.appName}
@@ -353,7 +373,7 @@ export function AppStoreClient() {
             {currentTab === "comparison" ? (
               <div className="detail-wrap">
                 {currentApp ? (
-                  <div className="hero-card">
+                  <div className="hero-card lift">
                     <img
                       src={currentApp.appStoreUrl ? selectedAppImage : selectedAppImage}
                       alt={currentApp.name}
