@@ -465,7 +465,9 @@ export function AppStoreClient() {
 
   async function copyShareLink() {
     if (!selectedAppId) return;
-    const url = `${window.location.origin}/app/${selectedAppId}`;
+    const selectedObject = comparisonResults[selectedComparisonIndex]?.object ?? "";
+    const objectParam = selectedObject ? `?object=${encodeURIComponent(selectedObject)}` : "";
+    const url = `${window.location.origin}/app/${selectedAppId}${objectParam}`;
     await navigator.clipboard.writeText(url);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1500);
